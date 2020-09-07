@@ -1,0 +1,472 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>详细分析 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="shellspicker">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search-pro/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-chapter-fold/chapter-fold.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-page-toc-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-lightbox/css/lightbox.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="thread_channel_device.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+    
+        
+        <li>
+            <a href="https://github.com/shellspicker" target="_blank" class="custom-link">my github</a>
+        </li>
+    
+    
+
+    
+    <li class="divider"></li>
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    index
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="thread_channel_device.html">
+            
+                <a href="thread_channel_device.html">
+            
+                    
+                    spdk设备模型
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="detail.html">
+            
+                <a href="detail.html">
+            
+                    
+                    详细分析
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >详细分析</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x5B9E;&#x4F8B;&#x5206;&#x6790;">&#x5B9E;&#x4F8B;&#x5206;&#x6790;</h1>
+<p>&#x4ECE;&#x8FD8;&#x662F;&#x4ECE;spdk_io_device_register&#x5F00;&#x59CB;, &#x5206;&#x6790;&#x5176;io_device&#x5BF9;&#x5E94;&#x7684;io_channel&#x505A;&#x7684;&#x989D;&#x5916;&#x64CD;&#x4F5C;.</p>
+<p>&#x6807;&#x9898;2: &#x6587;&#x4EF6;.</p>
+<p>&#x6807;&#x9898;3: &#x51FD;&#x6570;.</p>
+<p>&#x6B63;&#x6587;: &#x6B64;&#x51FD;&#x6570;&#x5185;&#x5FC5;&#x5B9A;&#x6709;&#x4E2A;spdk_io_device_register&#x8C03;&#x7528;, &#x7136;&#x540E;&#x5C55;&#x5F00;&#x5206;&#x6790;.</p>
+<p>&#x6709;&#x4E9B;&#x7ED3;&#x6784;&#x4F53;, &#x8FD9;&#x91CC;&#x4E0D;&#x4F1A;&#x5217;&#x51FA;&#x5176;&#x5185;&#x5BB9;, &#x81EA;&#x884C;&#x67E5;&#x770B;&#x4EE3;&#x7801;.</p>
+<h2 id="libbdevbdevc">lib/bdev/bdev.c</h2>
+<h3 id="spdkbdevinitialize">spdk_bdev_initialize</h3>
+<pre><code class="lang-c">spdk_io_device_register(&amp;g_bdev_mgr, bdev_mgmt_channel_create, bdev_mgmt_channel_destroy, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> spdk_bdev_mgmt_channel), <span class="hljs-string">&quot;bdev_mgr&quot;</span>);
+</code></pre>
+<hr>
+<p>io_device&#x4E3A;g_bdev_mgr, &#x7C7B;&#x578B;&#x4E3A;struct spdk_bdev_mgr.</p>
+<pre><code class="lang-c"><span class="hljs-keyword">struct</span> spdk_bdev_mgr {
+    spdk_mempool *bdev_io_pool;
+};
+</code></pre>
+<p>&#x4E3B;&#x8981;&#x662F;&#x7BA1;&#x7406;&#x4E00;&#x4E9B;mempool&#x7684;&#x5206;&#x914D;.</p>
+<hr>
+<p>&#x989D;&#x5916;&#x7A7A;&#x95F4;&#x4E3A;struct spdk_bdev_mgmt_channel.</p>
+<pre><code class="lang-c"><span class="hljs-keyword">struct</span> spdk_bdev_mgmt_channel {
+    <span class="hljs-keyword">bdev_io_stailq_t</span> per_thread_cache;
+    TAILQ_HEAD(, spdk_bdev_shared_resource) shared_resources;
+    TAILQ_HEAD(, spdk_bdev_io_wait_entry) io_wait_queue;
+};
+</code></pre>
+<hr>
+<p>&#x51FD;&#x6570;bdev_mgmt_channel_create.</p>
+<pre><code class="lang-c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">bdev_mgmt_channel_create</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *io_device, <span class="hljs-keyword">void</span> *ctx_buf)</span>
+</span>{
+    <span class="hljs-keyword">struct</span> spdk_bdev_mgmt_channel *ch = ctx_buf;
+    <span class="hljs-keyword">struct</span> spdk_bdev_io *bdev_io;
+
+    STAILQ_INIT(&amp;ch-&gt;per_thread_cache);
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; ch-&gt;bdev_io_cache_size; i++) {
+        bdev_io = spdk_mempool_get(g_bdev_mgr.bdev_io_pool);
+        STAILQ_INSERT_HEAD(&amp;ch-&gt;per_thread_cache, bdev_io, internal.buf_link);
+    }
+    TAILQ_INIT(&amp;ch-&gt;shared_resources);
+    TAILQ_INIT(&amp;ch-&gt;io_wait_queue);
+}
+</code></pre>
+<p>&#x628A;g_bdev_mgr&#x7684;bdev_io_pool&#x6309;&#x7167;&#x914D;&#x7F6E;&#x5206;&#x914D;&#x5230;spdk_bdev_mgmt_channel&#x7684;per_thread_cache&#x91CC;.</p>
+<h3 id="bdevinit">bdev_init</h3>
+<pre><code class="lang-c">spdk_io_device_register(__bdev_to_io_dev(bdev), bdev_channel_create, bdev_channel_destroy, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> spdk_bdev_channel), bdev_name);
+</code></pre>
+<hr>
+<p>io_device&#x4E3A;__bdev_to_io_dev(bdev).</p>
+<p>&#x53EF;&#x4EE5;&#x5355;&#x7EAF;&#x628A;&#x5176;&#x770B;&#x4F5C;&#x662F;bdev, __bdev_to_io_dev&#x53EF;&#x4EE5;&#x6682;&#x65F6;&#x65E0;&#x89C6;. &#x7C7B;&#x578B;&#x4E3A;spdk_bdev.</p>
+<pre><code class="lang-c"><span class="hljs-keyword">struct</span> spdk_bdev {
+    <span class="hljs-keyword">void</span> *ctxt;
+};
+</code></pre>
+<hr>
+<p>&#x989D;&#x5916;&#x7A7A;&#x95F4;&#x4E3A;struct spdk_bdev_channel.</p>
+<pre><code class="lang-c"><span class="hljs-keyword">struct</span> spdk_bdev_channel {
+    <span class="hljs-keyword">struct</span> spdk_bdev *bdev;
+    <span class="hljs-keyword">struct</span> spdk_io_channel *channel;
+};
+</code></pre>
+<p>&#x5176;&#x4E2D;&#x7684;channel&#x662F;&#x5B50;channel.</p>
+<hr>
+<p>&#x51FD;&#x6570;bdev_channel_create.</p>
+<pre><code class="lang-c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">bdev_channel_create</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *io_device, <span class="hljs-keyword">void</span> *ctx_buf)</span>
+</span>{
+    <span class="hljs-keyword">struct</span> spdk_bdev        *bdev = __bdev_from_io_dev(io_device);
+    <span class="hljs-keyword">struct</span> spdk_bdev_channel    *ch = ctx_buf;
+    <span class="hljs-keyword">struct</span> spdk_io_channel&#x203A;     *mgmt_io_ch;
+    <span class="hljs-keyword">struct</span> spdk_bdev_mgmt_channel&#x203A;  *mgmt_ch;
+
+    ch-&gt;bdev = bdev;
+    ch-&gt;channel = bdev-&gt;fn_table-&gt;get_io_channel(bdev-&gt;ctxt);
+    mgmt_io_ch = spdk_get_io_channel(&amp;g_bdev_mgr);
+    mgmt_ch = spdk_io_channel_get_ctx(mgmt_io_ch);
+}
+</code></pre>
+<p>&#x7ED1;&#x5B9A;&#x4E86;spdk_bdev_channel-&gt;bdev&#x4E3A;spdk_io_device_register&#x76F8;&#x5173;&#x7684;bdev.<br>&#x83B7;&#x53D6;&#x4E86;&#x5B50;channel.<br>&#x83B7;&#x53D6;&#x4E86;g_bdev_mgr-&gt;get_io_channel, &#x5F97;&#x5230;struct spdk_bdev_mgmt_channel.</p>
+<h2 id="modulebdevnvmebdevnvmec">module/bdev/nvme/bdev_nvme.c</h2>
+<h3 id="bdevnvmelibraryinit">bdev_nvme_library_init</h3>
+<pre><code class="lang-c">spdk_io_device_register(&amp;g_nvme_bdev_ctrlrs, bdev_nvme_poll_group_create_cb, bdev_nvme_poll_group_destroy_cb, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> nvme_bdev_poll_group), <span class="hljs-string">&quot;bdev_nvme_poll_groups&quot;</span>);
+</code></pre>
+<hr>
+<p>io_device&#x4E3A;g_nvme_bdev_ctrlrs, &#x7C7B;&#x578B;&#x4E3A;struct nvme_bdev_ctrlrs(&#x5176;&#x5B9E;&#x662F;&#x4E00;&#x4E2A;struct nvme_bdev_ctrlr&#x7684;&#x94FE;&#x8868;).</p>
+<pre><code class="lang-c"><span class="hljs-keyword">struct</span> nvme_bdev_ctrlrs {
+};
+</code></pre>
+<p>&#x8FD9;&#x91CC;&#x4E0D;&#x5173;&#x5FC3;&#x5176;&#x7ED3;&#x6784;, &#x56E0;&#x4E3A;&#x4E4B;&#x540E;&#x7528;&#x4E0D;&#x5230;.</p>
+<hr>
+<p>&#x989D;&#x5916;&#x7A7A;&#x95F4;&#x4E3A;struct nvme_bdev_poll_group</p>
+<pre><code class="lang-c"><span class="hljs-keyword">struct</span> nvme_bdev_poll_group {
+    <span class="hljs-keyword">struct</span> spdk_nvme_poll_group *group;
+    <span class="hljs-keyword">struct</span> spdk_poller *poller;
+};
+</code></pre>
+<hr>
+<p>&#x51FD;&#x6570;bdev_nvme_poll_group_create_cb.</p>
+<pre><code class="lang-c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">bdev_nvme_poll_group_create_cb</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *io_device, <span class="hljs-keyword">void</span> *ctx_buf)</span>
+</span>{
+    <span class="hljs-keyword">struct</span> nvme_bdev_poll_group *group = ctx_buf;
+
+    group-&gt;group = spdk_nvme_poll_group_create(group);
+    group-&gt;poller = spdk_poller_register(bdev_nvme_poll, group, g_opts.nvme_ioq_poll_period_us);
+}
+</code></pre>
+<p>&#x521B;&#x5EFA;&#x4E86;group(&#x7C7B;&#x578B;&#x4E3A;struct spdk_nvme_poll_group)<br>&#x521B;&#x5EFA;&#x4E86;poller, &#x51FD;&#x6570;&#x4E3A;bdev_nvme_poll.</p>
+<h3 id="createctrlr">create_ctrlr</h3>
+<pre><code class="lang-c">spdk_io_device_register(nvme_bdev_ctrlr, bdev_nvme_create_cb, bdev_nvme_destroy_cb, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> nvme_io_channel), name);
+</code></pre>
+<hr>
+<p>io_device&#x4E3A;nvme_bdev_ctrlr, &#x7C7B;&#x578B;&#x4E3A;struct nvme_bdev_ctrlr.</p>
+<pre><code class="lang-c"><span class="hljs-keyword">struct</span> nvme_bdev_ctrlr {
+    <span class="hljs-keyword">struct</span> spdk_nvme_ctrlr&#x203A;     *ctrlr;
+    <span class="hljs-keyword">struct</span> spdk_nvme_transport_id&#x203A;  trid;
+};
+</code></pre>
+<p>&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x8FD9;&#x91CC;&#x7684;&#x7ED3;&#x6784;&#x4F53;&#x6BD4;&#x8F83;&#x63A5;&#x8FD1;&#x786C;&#x4EF6;&#x4FE1;&#x606F;&#x4E86;.</p>
+<hr>
+<p>&#x989D;&#x5916;&#x7A7A;&#x95F4;&#x4E3A;struct nvme_io_channel.</p>
+<pre><code class="lang-c"><span class="hljs-keyword">struct</span> nvme_io_channel {
+    <span class="hljs-keyword">struct</span> spdk_nvme_qpair&#x203A;     *qpair;
+    <span class="hljs-keyword">struct</span> nvme_bdev_poll_group&#x203A;*group;
+};
+</code></pre>
+<hr>
+<p>&#x51FD;&#x6570;bdev_nvme_create_cb.</p>
+<pre><code class="lang-c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">bdev_nvme_create_cb</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *io_device, <span class="hljs-keyword">void</span> *ctx_buf)</span>
+</span>{
+    <span class="hljs-keyword">struct</span> nvme_bdev_ctrlr *nvme_bdev_ctrlr = io_device;
+    <span class="hljs-keyword">struct</span> nvme_io_channel *ch = ctx_buf;
+    <span class="hljs-keyword">struct</span> spdk_io_channel *pg_ch = <span class="hljs-literal">NULL</span>;
+
+    ch-&gt;qpair = spdk_nvme_ctrlr_alloc_io_qpair(nvme_bdev_ctrlr-&gt;ctrlr, &amp;opts, <span class="hljs-keyword">sizeof</span>(opts));
+    pg_ch = spdk_get_io_channel(&amp;g_nvme_bdev_ctrlrs);
+    ch-&gt;group = spdk_io_channel_get_ctx(pg_ch);
+    spdk_nvme_poll_group_add(ch-&gt;group-&gt;group, ch-&gt;qpair);
+    spdk_nvme_ctrlr_connect_io_qpair(nvme_bdev_ctrlr-&gt;ctrlr, ch-&gt;qpair);
+}
+</code></pre>
+<p>&#x5206;&#x914D;&#x4E86;io_qpair.<br>&#x83B7;&#x53D6;&#x4E86;g_nvme_bdev_ctrlrs-&gt;get_io_channel, &#x5F97;&#x5230;&#x4E86;struct nvme_bdev_poll_group.</p>
+<h2 id="modulebdevzoneblockvbdevzoneblockc">module/bdev/zone_block/vbdev_zone_block.c</h2>
+<h3 id="zoneblockregister">zone_block_register</h3>
+<pre><code class="lang-c">spdk_io_device_register(bdev_node, _zone_block_ch_create_cb, _zone_block_ch_destroy_cb, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> zone_block_io_channel), name-&gt;vbdev_name);
+</code></pre>
+<hr>
+<p>io_device&#x4E3A;bdev_node, &#x7C7B;&#x578B;&#x4E3A;struct bdev_zone_block.</p>
+<pre><code class="lang-c"><span class="hljs-keyword">struct</span> bdev_zone_block {
+    <span class="hljs-keyword">struct</span> spdk_bdev bdev;
+    <span class="hljs-keyword">struct</span> spdk_bdev_desc *base_desc;
+};
+</code></pre>
+<p>base_desc&#x5373;&#x4E3A;zone&#x6A21;&#x5757;&#x6240;&#x4F9D;&#x8D56;&#x7684;nvme&#x6A21;&#x5757;&#x5BF9;&#x5E94;&#x7684;bdev&#x7684;&#x63CF;&#x8FF0;&#x7B26;.</p>
+<hr>
+<p>&#x989D;&#x5916;&#x7A7A;&#x95F4;&#x4E3A;struct zone_block_io_channel.</p>
+<pre><code class="lang-c"><span class="hljs-keyword">struct</span> zone_block_io_channel {
+    <span class="hljs-keyword">struct</span> spdk_io_channel *base_ch;
+};
+</code></pre>
+<p>&#x7C7B;&#x4F3C;&#x7684;, base_ch&#x4E5F;&#x662F;zone&#x6A21;&#x5757;&#x6240;&#x4F9D;&#x8D56;&#x7684;nvme&#x6A21;&#x5757;&#x5BF9;&#x5E94;&#x7684;&#x8BBE;&#x5907;&#x7684;io_channel. &#x5373;&#x5B50;channel.</p>
+<hr>
+<p>&#x51FD;&#x6570;_zone_block_ch_create_cb.</p>
+<pre><code class="lang-c"><span class="hljs-keyword">int</span> _zone_block_ch_create_cb(<span class="hljs-keyword">void</span> *io_device, <span class="hljs-keyword">void</span> *ctx_buf)
+{
+    <span class="hljs-keyword">struct</span> zone_block_io_channel *bdev_ch = ctx_buf;
+    <span class="hljs-keyword">struct</span> bdev_zone_block *bdev_node = io_device;
+    bdev_ch-&gt;base_ch = spdk_bdev_get_io_channel(bdev_node-&gt;base_desc);
+}
+</code></pre>
+<p>&#x83B7;&#x53D6;&#x4E86;&#x5B50;channel.</p>
+<footer class="page-footer"><span class="copyright">
+Copyright shellspicker all right reserved&#xFF0C;powered by <a href="https://github.com/shellspicker" target="_blank">shellspicker</a></span><span class="footer-modification">&#x4FEE;&#x6539;&#x65F6;&#x95F4;: 
+2020-09-07 11:27:52
+</span></footer>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="thread_channel_device.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: spdk设备模型">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"详细分析","level":"1.3","depth":1,"previous":{"title":"spdk设备模型","level":"1.2","depth":1,"path":"content/thread_channel_device.md","ref":"content/thread_channel_device.md","articles":[]},"dir":"ltr"},"config":{"plugins":["hide-element","-lunr","-search","search-pro","chapter-fold","splitter","page-toc-button","back-to-top-button","lightbox","tbfed-pagefooter","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"\nCopyright shellspicker","modify_label":"修改时间: ","modify_format":"YYYY-MM-DD HH:mm:ss"},"chapter-fold":{},"livereload":{},"splitter":{},"search-pro":{},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"page-toc-button":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","tiele":"spdk relevant","author":"shellspicker","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"language":"zh-hans","links":{"sidebar":{"my github":"https://github.com/shellspicker"}},"gitbook":"*","description":"rtfsc"},"file":{"path":"content/detail.md","mtime":"2020-09-07T03:27:52.872Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-07T03:03:07.154Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-hide-element/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-pro/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-pro/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-chapter-fold/chapter-fold.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-page-toc-button/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lightbox/js/lightbox.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
